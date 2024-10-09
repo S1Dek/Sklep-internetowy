@@ -17,8 +17,7 @@ namespace Sklep_internetowy.Controllers
         {
             return View();
         }
-
-        public IActionResult Privacy()
+        public IActionResult Orders()
         {
             return View();
         }
