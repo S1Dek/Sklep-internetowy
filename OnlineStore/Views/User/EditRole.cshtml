@@ -1,0 +1,18 @@
+﻿@model OnlineStore.Models.User
+
+<h2>Edit Role for @Model.FirstName @Model.LastName</h2>
+
+<form asp-action="EditRole" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div>
+        <label for="role">Role</label>
+        <select id="role" name="role">
+            @foreach (var role in ViewBag.Roles)
+            {
+                var isSelected = role == ViewBag.CurrentRole ? "selected" : ""; 
+                <option value="@role" selected="@isSelected">@role</option> <!-- Tag Helper -->
+            }
+        </select>
+    </div>
+    <button type="submit">Save</button>
+</form>

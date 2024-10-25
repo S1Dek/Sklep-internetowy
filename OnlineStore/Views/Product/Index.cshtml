@@ -1,0 +1,49 @@
+﻿@model IEnumerable<OnlineStore.Models.Product>
+
+<h2>Products</h2>
+
+<a asp-action="Create">Create Product</a>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Details</th>
+                <th>Add to Cart</th> <!-- Nowa kolumna do dodawania do koszyka -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" alt="@product.Name" style="width:100px;height:auto;" />
+                        }
+                        else
+                        {
+                            <span>No Image</span>
+                        }
+                    </td>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price.ToString("C")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@product.Id">View Details</a>
+                    </td>
+                    <td>
+                        <form asp-action="AddToCart" method="post">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

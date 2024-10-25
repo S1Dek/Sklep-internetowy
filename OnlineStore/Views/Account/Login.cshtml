@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "_Layout";
+}
+@model OnlineStore.Models.UserLoginModel
+
+<h2>Login</h2>
+
+<form asp-action="Login" method="post">
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" type="email" />
+    </div>
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" type="password" />
+    </div>
+    <button type="submit">Login</button>
+</form>
