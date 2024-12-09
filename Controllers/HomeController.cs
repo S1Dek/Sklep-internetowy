@@ -3,7 +3,7 @@ using Sklep_Internetowy.Data;
 using Sklep_Internetowy.Models;
 using System.Linq;
 
-namespace SklepInternetowy.Controllers
+namespace Sklep_Internetowy.Controllers
 {
     public class HomeController : Controller
     {
@@ -14,22 +14,10 @@ namespace SklepInternetowy.Controllers
             _context = context;
         }
 
-        // Strona g³ówna - wyœwietlanie produktów
         public IActionResult Index()
         {
-            var products = _context.Products.ToList();
+            var products = _context.Products.ToList(); // Pobierz wszystkie produkty z bazy
             return View(products);
-        }
-
-        // Szczegó³y produktu
-        public IActionResult ProductDetails(int id)
-        {
-            var product = _context.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
         }
     }
 }

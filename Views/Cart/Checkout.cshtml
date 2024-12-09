@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Sklep_Internetowy.Models.CartItem>
+
+<h2>Checkout</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Product.Price.ToString("C")</td>
+                <td>@(item.Product.Price * item.Quantity).ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Total: @Model.Sum(i => i.Product.Price * i.Quantity).ToString("C")</h3>
+
+<form asp-action="FinalizeOrder" method="post">
+    <button type="submit" class="btn btn-success">Complete Purchase</button>
+</form>

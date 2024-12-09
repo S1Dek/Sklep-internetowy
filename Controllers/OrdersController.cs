@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Sklep_Internetowy.Data;
 using Sklep_Internetowy.Models;
 using System.Linq;
+using System.Security.Claims;
 
 namespace SklepInternetowy.Controllers
 {
@@ -16,29 +18,30 @@ namespace SklepInternetowy.Controllers
             _context = context;
         }
 
+        // Helper: Pobierz ID użytkownika jako int
+        private int GetUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+        }
+
         // Zakładka koszyka użytkownika
         public IActionResult Cart()
         {
-            if (!int.TryParse(User.Identity.Name, out int userId))
-            {
-                return Unauthorized();
-            }
+            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika jako int
 
             // Pobierz elementy koszyka użytkownika
-            var cartItems = _context.CartItems.Where(c => c.UserId == userId).ToList();
+            var cartItems = _context.CartItems
+                .Where(c => c.UserId == userId) // Porównanie int do int
+                .ToList();
+
             return View(cartItems);
         }
-
 
         // Dodanie produktu do koszyka
         [HttpPost]
         public IActionResult AddToCart(int productId, int quantity = 1)
         {
-            // Konwersja User.Identity.Name na int (jeśli używamy ID użytkownika jako liczby całkowitej)
-            if (!int.TryParse(User.Identity.Name, out int userId))
-            {
-                return Unauthorized(); // Jeśli nie można przekonwertować, zwracamy błąd autoryzacji
-            }
+            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika jako int
 
             var product = _context.Products.FirstOrDefault(p => p.Id == productId);
             if (product == null)
@@ -53,7 +56,7 @@ namespace SklepInternetowy.Controllers
                 cartItem = new CartItem
                 {
                     ProductId = productId,
-                    UserId = userId, // Użycie zparsowanego ID użytkownika
+                    UserId = userId, // UserId jako int
                     Quantity = quantity
                 };
                 _context.CartItems.Add(cartItem);
@@ -66,7 +69,6 @@ namespace SklepInternetowy.Controllers
             _context.SaveChanges();
             return RedirectToAction("Cart");
         }
-
 
         // Usunięcie produktu z koszyka
         [HttpPost]
@@ -85,13 +87,14 @@ namespace SklepInternetowy.Controllers
         [HttpPost]
         public IActionResult Checkout()
         {
-            if (!int.TryParse(User.Identity.Name, out int userId))
-            {
-                return Unauthorized();
-            }
+            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika jako int
 
             // Pobierz elementy koszyka użytkownika
-            var cartItems = _context.CartItems.Where(c => c.UserId == userId).ToList();
+            var cartItems = _context.CartItems
+                .Where(c => c.UserId == userId) // Porównanie int do int
+                .Include(c => c.Product)
+                .ToList();
+
             if (!cartItems.Any())
             {
                 return RedirectToAction("Cart");
@@ -100,7 +103,7 @@ namespace SklepInternetowy.Controllers
             // Stwórz nowe zamówienie
             var order = new Order
             {
-                UserId = userId,
+                UserId = userId, // Przypisz UserId jako int
                 OrderDate = DateTime.Now,
                 TotalAmount = cartItems.Sum(c => c.Quantity * c.Product.Price),
                 OrderDetails = cartItems.Select(c => new OrderDetail
@@ -118,24 +121,14 @@ namespace SklepInternetowy.Controllers
             return RedirectToAction("OrderConfirmation", new { id = order.Id });
         }
 
-
         // Potwierdzenie zamówienia
         public IActionResult OrderConfirmation(int id)
         {
             var order = _context.Orders
                 .Where(o => o.Id == id)
-                .Select(o => new
-                {
-                    o.Id,
-                    o.OrderDate,
-                    o.TotalAmount,
-                    Details = o.OrderDetails.Select(d => new
-                    {
-                        d.Product.Name,
-                        d.Quantity,
-                        d.Price
-                    })
-                }).FirstOrDefault();
+                .Include(o => o.OrderDetails)
+                .ThenInclude(d => d.Product)
+                .FirstOrDefault();
 
             if (order == null)
             {

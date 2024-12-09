@@ -23,8 +23,46 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="MyOrders">My Orders</a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ManageUsers">Manage Users</a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Moderator"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Manage">Manage Products</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
