@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Sklep_Internetowy.Models.User>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<Sklep_Internetowy.Models.User> UserManager
+
+<h2>Panel Administratora - zarządzanie użytkownikami</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(user => user.Id)</th>
+            <th>@Html.DisplayNameFor(user => user.FirstName)</th>
+            <th>@Html.DisplayNameFor(user => user.LastName)</th>
+            <th>@Html.DisplayNameFor(user => user.Email)</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            var roles = await UserManager.GetRolesAsync(user);
+            <!-- Pobierz role użytkownika -->
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@user.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@user.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@user.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

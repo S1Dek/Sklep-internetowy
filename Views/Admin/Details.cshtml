@@ -1,0 +1,57 @@
+﻿@model Sklep_Internetowy.Models.Account.EditUserViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    </div>
+        <h4>Szczegóły użytkowników</h4>
+        <hr/>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User.FirstName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.FirstName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User.LastName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.LastName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.Email)
+            </dd>
+            <dt class="col-sm-2">
+                <label>Przypisane Role:</label>
+            </dt>
+            <dd class="col-sm-10">
+            @if (Model.AssignedRoles != null && Model.AssignedRoles.Any())
+            {
+                <ul>
+                    @foreach (var role in Model.AssignedRoles)
+                    {
+                        <li>@role</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Brak przypisanych ról</p>
+            }
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.User.Id" class="btn btn-primary">Edytuj</a>
+        <a asp-action="ManageUsers" class="btn btn-secondary">Powrót</a>
+    </div>
+</body>
+</html>

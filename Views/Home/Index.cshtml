@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Sklep_Internetowy.Models.Product>
+
+<h2>Dostępne produkty</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Zdjęcie</th>
+            <th>Nazwa Produktu</th>
+            <th>Cena</th>
+            <th>Ilość w magazynie</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@product.Image" alt="@product.Name" style="max-width: 100px; max-height: 100px;" />
+                </td>
+                <td>@product.Name</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>@product.Stock</td>
+            </tr>
+        }
+    </tbody>
+</table>

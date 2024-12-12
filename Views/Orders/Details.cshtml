@@ -1,0 +1,29 @@
+﻿@model Sklep_Internetowy.Models.Order
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<h2>Szczegóły zamówienia</h2>
+<p><strong>Order ID:</strong> @Model.Id</p>
+<p><strong>Date:</strong> @Model.OrderDate.ToShortDateString()</p>
+<p><strong>Total:</strong> @Model.TotalAmount.ToString("C")</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var detail in Model.OrderDetails)
+        {
+            <tr>
+                <td>@detail.Product.Name</td>
+                <td>@detail.Quantity</td>
+                <td>@detail.Price.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
