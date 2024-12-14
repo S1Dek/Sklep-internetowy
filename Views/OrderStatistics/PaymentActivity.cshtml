@@ -1,0 +1,55 @@
+﻿@model Sklep_Internetowy.Models.OrderStatisticsViewModel
+
+@{
+    ViewData["Title"] = "Aktywność Płatności";
+}
+
+<h2>Aktywność Płatności w Ostatnich 30 Dniach</h2>
+
+<canvas id="paymentChart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    async function fetchPaymentData() {
+        const response = await fetch('/OrderStatistics/PaymentActivity');
+        const data = await response.json();
+
+        const labels = data.map(d => new Date(d.date).toLocaleDateString());
+        const revenues = data.map(d => d.totalRevenue);
+
+        const ctx = document.getElementById('paymentChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line', // Typ wykresu
+            data: {
+                labels: labels, // Daty jako etykiety osi X
+                datasets: [{
+                    label: 'Dochód (PLN)',
+                    data: revenues, // Dochody jako dane osi Y
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Data'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Dochód (PLN)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    fetchPaymentData();
+</script>

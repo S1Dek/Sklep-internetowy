@@ -1,0 +1,23 @@
+﻿@model Sklep_Internetowy.Models.OrderStatisticsViewModel
+
+<h2>Order Statistics</h2>
+
+<div>
+    <h3>Łączna liczba zamówień: @Model.TotalOrders</h3>
+    <h3>Całkowity dochód: @Model.TotalRevenue.ToString("C")</h3>
+</div>
+
+@if (Model.MostOrderedProduct != null)
+{
+    <div>
+        <h4>Najczęściej zamawiany produkt:</h4>
+        <p>
+            <strong>Nazwa produktu:</strong> @Model.MostOrderedProduct.Product.Name <br />
+            <strong>Całkowita ilość zamówiona:</strong> @Model.MostOrderedProduct.TotalQuantity
+        </p>
+    </div>
+}
+else
+{
+    <p>Brak zamówień produktów.</p>
+}

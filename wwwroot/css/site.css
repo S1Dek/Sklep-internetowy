@@ -12,11 +12,51 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.product-image {
+    max-width: 90px;
+    max-height: 90px;
+    transition: transform 0.2s ease;
+}
+
+    .product-image:hover {
+        transform: scale(1.1);
+        filter: brightness(1.1);
+    }
+
+.table-striped {
+    background-color: #fff;
+    border-color: #ddd;
+}
+
 html {
   position: relative;
   min-height: 100%;
 }
 
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Open Sans', sans-serif; 
+    background-color: #f4f4f4; 
+    color: #333; 
 }

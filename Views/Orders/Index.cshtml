@@ -1,30 +1,26 @@
 ﻿@model IEnumerable<Sklep_Internetowy.Models.Order>
 
-<h2>My Orders</h2>
-<p>
-    <a asp-action="Create">Stwórz</a>
-</p>
+<h2>Moje zamówienia</h2>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Order ID</th>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Details</th>
+            <th>ID zamówienia</th>
+            <th>Data zamówienia</th>
+            <th>Łączna kwota</th>
+            <th>Szczegóły</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var order in Model)
+
         {
             <tr>
                 <td>@order.Id</td>
-                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
                 <td>@order.TotalAmount.ToString("C")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-primary">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-primary">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@order.Id" class="btn btn-primary">Delete</a>
+                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-primary">Zobacz szczegóły</a>
                 </td>
             </tr>
         }

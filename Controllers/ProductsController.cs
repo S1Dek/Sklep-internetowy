@@ -43,7 +43,6 @@ namespace SklepInternetowy.Controllers
             return View();
         }
 
-        // Obsługa dodawania nowego produktu
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Product product)
@@ -67,7 +66,6 @@ namespace SklepInternetowy.Controllers
             }
             return View(product);
         }
-        // Obsługa edycji produktu
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Product product)
@@ -97,7 +95,6 @@ namespace SklepInternetowy.Controllers
             return View(product);
         }
 
-        // Potwierdzenie usunięcia produktu
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)

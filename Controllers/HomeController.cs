@@ -16,7 +16,7 @@ namespace Sklep_Internetowy.Controllers
 
         public IActionResult Index()
         {
-            var products = _context.Products.ToList(); // Pobierz wszystkie produkty z bazy
+            var products = _context.Products.ToList(); // pobieranie prodfuktu z bazy 
             return View(products);
         }
     }

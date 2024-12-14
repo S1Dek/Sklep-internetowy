@@ -18,80 +18,43 @@ namespace SklepInternetowy.Controllers
             _context = context;
         }
 
-        // Helper: Pobierz ID użytkownika jako int
+        // ID użytkownika jako int
         private int GetUserId()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         }
 
-        // Zakładka koszyka użytkownika
-        public IActionResult Cart()
+        public IActionResult Index()
         {
-            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika jako int
+            var userId = GetUserId();
+            var userRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
 
-            // Pobierz elementy koszyka użytkownika
-            var cartItems = _context.CartItems
-                .Where(c => c.UserId == userId) // Porównanie int do int
-                .ToList();
+            IQueryable<Order> orders;
 
-            return View(cartItems);
-        }
-
-        // Dodanie produktu do koszyka
-        [HttpPost]
-        public IActionResult AddToCart(int productId, int quantity = 1)
-        {
-            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika jako int
-
-            var product = _context.Products.FirstOrDefault(p => p.Id == productId);
-            if (product == null)
+            if (userRoles.Contains("admin") || userRoles.Contains("moderator"))
             {
-                return NotFound();
-            }
-
-            // Znajdź element koszyka użytkownika lub dodaj nowy
-            var cartItem = _context.CartItems.FirstOrDefault(c => c.ProductId == productId && c.UserId == userId);
-            if (cartItem == null)
-            {
-                cartItem = new CartItem
-                {
-                    ProductId = productId,
-                    UserId = userId, // UserId jako int
-                    Quantity = quantity
-                };
-                _context.CartItems.Add(cartItem);
+                orders = _context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product);
             }
             else
             {
-                cartItem.Quantity += quantity;
+                orders = _context.Orders
+                    .Where(o => o.UserId == userId)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product);
+                Console.WriteLine("DUPA");
             }
 
-            _context.SaveChanges();
-            return RedirectToAction("Cart");
+            return View(orders.ToList());
         }
 
-        // Usunięcie produktu z koszyka
-        [HttpPost]
-        public IActionResult RemoveFromCart(int cartItemId)
-        {
-            var cartItem = _context.CartItems.FirstOrDefault(c => c.Id == cartItemId);
-            if (cartItem != null)
-            {
-                _context.CartItems.Remove(cartItem);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Cart");
-        }
-
-        // Finalizacja zamówienia
         [HttpPost]
         public IActionResult Checkout()
         {
-            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika jako int
+            var userId = GetUserId(); 
 
-            // Pobierz elementy koszyka użytkownika
+            // pobieranie koszyka 
             var cartItems = _context.CartItems
-                .Where(c => c.UserId == userId) // Porównanie int do int
+                .Where(c => c.UserId == userId)
                 .Include(c => c.Product)
                 .ToList();
 
@@ -100,10 +63,9 @@ namespace SklepInternetowy.Controllers
                 return RedirectToAction("Cart");
             }
 
-            // Stwórz nowe zamówienie
             var order = new Order
             {
-                UserId = userId, // Przypisz UserId jako int
+                UserId = userId,
                 OrderDate = DateTime.Now,
                 TotalAmount = cartItems.Sum(c => c.Quantity * c.Product.Price),
                 OrderDetails = cartItems.Select(c => new OrderDetail
@@ -115,27 +77,37 @@ namespace SklepInternetowy.Controllers
             };
 
             _context.Orders.Add(order);
-            _context.CartItems.RemoveRange(cartItems); // Opróżnij koszyk
+
+            _context.CartItems.RemoveRange(cartItems);
+
             _context.SaveChanges();
 
             return RedirectToAction("OrderConfirmation", new { id = order.Id });
         }
 
-        // Potwierdzenie zamówienia
-        public IActionResult OrderConfirmation(int id)
+        public IActionResult Details(int id)
         {
-            var order = _context.Orders
+            var userId = GetUserId();
+            var userRoles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+
+            var query = _context.Orders
                 .Where(o => o.Id == id)
                 .Include(o => o.OrderDetails)
-                .ThenInclude(d => d.Product)
-                .FirstOrDefault();
+                .ThenInclude(d => d.Product);
 
-            if (order == null)
+            if (!(userRoles.Contains("admin") || userRoles.Contains("moderator")))
+            {
+                query = (Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<Order, Product>)query.Where(o => o.UserId == userId);
+            }
+
+            var orderResult = query.FirstOrDefault();
+
+            if (orderResult == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(orderResult);
         }
     }
 }

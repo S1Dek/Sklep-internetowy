@@ -4,40 +4,40 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create Product</h2>
+<h2>Dodawanie produktu</h2>
 <hr />
 <div class="row">
     <div class="col-md-6">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group mb-3">
-                <label asp-for="Name" class="form-label">Product Name</label>
-                <input asp-for="Name" class="form-control" placeholder="Enter product name" />
+                <label asp-for="Name" class="form-label">Nazwa produktu</label>
+                <input asp-for="Name" class="form-control" placeholder="Podaj nazwe produktu" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
-                <label asp-for="Image" class="form-label">Image URL</label>
-                <input asp-for="Image" class="form-control" placeholder="Enter a valid image URL (e.g., https://example.com/image.jpg)" />
+                <label asp-for="Image" class="form-label">Obrazek URL</label>
+                <input asp-for="Image" class="form-control" placeholder="Podaj poprawny link (np., https://example.com/image.jpg)" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
-                <label asp-for="Price" class="form-label">Price</label>
-                <input asp-for="Price" class="form-control" placeholder="Enter product price" />
+                <label asp-for="Price" class="form-label">Cena</label>
+                <input asp-for="Price" class="form-control" placeholder="Dodaj cene produktu" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group mb-3">
-                <label asp-for="Stock" class="form-label">Stock</label>
-                <input asp-for="Stock" class="form-control" placeholder="Enter quantity in stock" />
+                <label asp-for="Stock" class="form-label">Ilość</label>
+                <input asp-for="Stock" class="form-control" placeholder="Podaj ilość produktów" />
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+                <a asp-action="Index" class="btn btn-secondary">Powrót</a>
             </div>
         </form>
     </div>
     <div class="col-md-6">
-        <h3>Preview</h3>
+        <h3>Podgląd</h3>
         <p>Tak będzie wyglądał obrazek:</p>
         <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100%; max-height: 300px; display: none;" />
     </div>

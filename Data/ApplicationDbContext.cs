@@ -52,5 +52,6 @@ namespace Sklep_Internetowy.Data
                 .OnDelete(DeleteBehavior.Cascade);
         }
         public DbSet<Sklep_Internetowy.Models.Account.EditUserViewModel> EditUserViewModel { get; set; }
+        public DbSet<Sklep_Internetowy.Models.OrderStatisticsViewModel> OrderStatisticsViewModel { get; set; } = default!;
     }
 }

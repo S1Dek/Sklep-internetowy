@@ -17,7 +17,6 @@ namespace Sklep_Internetowy.Controllers
             _context = context;
         }
 
-        // Wyświetlanie koszyka
         public IActionResult Index()
         {
             var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika
@@ -33,7 +32,7 @@ namespace Sklep_Internetowy.Controllers
         [HttpPost]
         public IActionResult AddToCart(int productId)
         {
-            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika
+            var userId = GetUserId();
 
             var cartItem = _context.CartItems
                 .FirstOrDefault(c => c.ProductId == productId && c.UserId == userId);
@@ -74,13 +73,12 @@ namespace Sklep_Internetowy.Controllers
         // Finalizacja zakupu
         public IActionResult Checkout()
         {
-            var userId = GetUserId(); // Pobierz ID zalogowanego użytkownika
+            var userId = GetUserId();
             var cartItems = _context.CartItems
                 .Where(c => c.UserId == userId)
                 .Include(c => c.Product)
                 .ToList();
 
-            // Możesz tutaj zaimplementować logikę zapisu zamówienia
             return View(cartItems);
         }
 
@@ -93,14 +91,27 @@ namespace Sklep_Internetowy.Controllers
                 .Include(c => c.Product)
                 .ToList();
 
-            // Logika zapisu zamówienia
-            // Możesz utworzyć nowy rekord Order w bazie danych
+            //  nowe zamowienie
+            var order = new Order
+            {
+                UserId = userId,
+                OrderDate = DateTime.Now,
+                TotalAmount = cartItems.Sum(i => i.Product.Price * i.Quantity),
+                OrderDetails = cartItems.Select(c => new OrderDetail
+                {
+                    ProductId = c.ProductId,
+                    Quantity = c.Quantity,
+                    Price = c.Product.Price
+                }).ToList()
+            };
 
-            // Wyczyść koszyk po finalizacji
+            _context.Orders.Add(order);
+
+            // czyszcenie koszyka
             _context.CartItems.RemoveRange(cartItems);
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index");
         }
 
         // Helper: Pobierz ID użytkownika jako int

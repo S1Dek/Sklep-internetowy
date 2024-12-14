@@ -12,10 +12,11 @@
     </thead>
     <tbody>
         @foreach (var product in Model)
+
         {
             <tr>
                 <td>
-                    <img src="@product.Image" alt="@product.Name" style="max-width: 100px; max-height: 100px;" />
+                    <img src="@product.Image" alt="@product.Name" class="product-image" />
                 </td>
                 <td>@product.Name</td>
                 <td>@product.Price.ToString("C")</td>
