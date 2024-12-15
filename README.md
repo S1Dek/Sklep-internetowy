@@ -1,5 +1,5 @@
 ## Dokumentacja techniczna
-Szczegółowa dokumentacja techniczna projektu znajduje się w pliku: Dokumentacja techniczna.pdf.
+Szczegółowa dokumentacja techniczna projektu znajduje się w pliku: [Dokumentacja techniczna.pdf](https://github.com/S1Dek/Sklep-internetowy/blob/project-finished/Dokumentacja%20techniczna.pdf).
 
 ## Baza danych
 Projekt wykorzystuje bazę danych SQLite, przechowywaną w pliku Sklep-internetowy.db.
