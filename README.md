@@ -14,7 +14,7 @@ Add-migration Test
 Update-database
 ```
 
-# Loginy oraz hasła dla utworzonych użytkowników
+### Loginy oraz hasła dla utworzonych użytkowników
 W celu tesowania aplikacji, można skorzystać z utworzonych już trzech użytkowników:
 | Email             | Hasło | Rola |
 | :---------------- | :------: | ----: |
